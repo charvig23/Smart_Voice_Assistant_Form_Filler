@@ -13,21 +13,21 @@ function speakText(text, callback) {
     speechSynthesis.speak(utterance);
 }
 
-
 function validateInput(field, value) {
     const fieldType = field.getAttribute('type');
-    
+
     if (fieldType === 'text') {  
-        return /^[A-Za-z\s]+$/.test(value);
-    } 
+        return /^[A-Za-z\s]+$/.test(value) || field.id === "passportNumber" || field.id === "address";
+    }
     if (fieldType === 'number') {  
         return /^\d+$/.test(value) && parseInt(value) > 0 && parseInt(value) < 120;
-    } 
-    if (fieldType === 'email') {  
-        value = value.replace(/ at the rate /g, "@"); 
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailPattern.test(value);
     }
+    // if (fieldType === 'email') {  
+    //     value = value.replace(/ at the rate /g, "@"); 
+    //     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    //     return emailPattern.test(value);
+    // }
+    
     return true;
 }
 
@@ -55,11 +55,11 @@ function fillNextField() {
 
             if (!validateInput(field, speechResult)) {
                 speakText(`Invalid ${label}. Please try again.`);
-                askForInput(); 
+                askForInput();
             } else {
-                if (field.getAttribute('type') === 'email') {
-                    speechResult = speechResult.replace(/ at the rate /g, "@"); 
-                }
+                // if (field.getAttribute('type') === 'email') {
+                //     speechResult = speechResult.replace(/ at the rate /g, "@"); 
+                // }
                 field.value = speechResult;
                 currentFieldIndex++;
                 setTimeout(fillNextField, 1000);
